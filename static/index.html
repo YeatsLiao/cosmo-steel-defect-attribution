@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>钢材表面质量缺陷智能归因与闭环处置平台</title>
+  <link rel="stylesheet" href="/static/css/app.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">跳到主内容</a>
+  <header class="topnav">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#2FD4C4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M12 2.5l7 3v5.2c0 4.4-3 8-7 9.3-4-1.3-7-4.9-7-9.3V5.5z"/>
+        <path d="M8.6 12.2l2.4 2.4 4.4-4.8"/>
+      </svg>
+      <span class="brand-title">钢材表面质量缺陷智能归因与闭环处置平台</span>
+      <span class="brand-ver">v1.0</span>
+    </div>
+    <div class="topnav-actions">
+      <span class="topnav-clock" id="clock"></span>
+      <button class="icon-btn" id="alert-bell" title="质量告警" aria-label="质量告警">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M6 9a6 6 0 0 1 12 0c0 5 2 5.6 2 6.5H4c0-.9 2-1.5 2-6.5"/><path d="M10 19.5a2 2 0 0 0 4 0"/></svg>
+        <span class="alert-badge hidden" id="alert-badge"></span>
+      </button>
+      <div class="alert-panel hidden" id="alert-panel"></div>
+      <button class="help-btn" id="help-btn" title="帮助" aria-label="帮助"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.6 2.6 0 1 1 3.6 2.4c-.8.4-1.21 1-1.2 1.8"/><circle cx="12" cy="17" r=".7" fill="currentColor" stroke="none"/></svg></button>
+      <div class="help-bubble hidden" id="help-bubble">第一次用？30 秒上手 →</div>
+    </div>
+  </header>
+
+  <div class="app-shell">
+    <aside class="sidenav" id="sidenav"></aside>
+    <div class="content-col">
+      <div class="alert-compact hidden" id="alert-compact"></div>
+      <section class="metrics" id="metrics"></section>
+      <div class="sample-bar hidden" id="sample-bar"></div>
+
+      <main class="page" id="main-content" tabindex="-1">
+
+    <section class="view" id="view-home">
+      <div class="home">
+        <section class="panel home-hero">
+          <div class="home-hero-main">
+            <h1 class="home-hero-title">钢材表面质量缺陷智能归因与闭环处置平台</h1>
+            <p class="home-hero-sub">上传钢材表面图片，识别六类缺陷，定位根因，生成整改工单并验证闭环效果</p>
+          </div>
+          <button class="btn btn-primary home-hero-btn" id="home-start-btn">开始使用 →</button>
+        </section>
+
+        <section class="panel home-card home-metrics-card" id="home-metrics" role="button" tabindex="0" aria-label="查看分析看板">
+          <div class="home-card-head">
+            <span class="home-card-title">核心指标</span>
+            <span class="home-card-more">查看分析看板 →</span>
+          </div>
+          <div class="home-metrics" id="home-metrics-body">
+            <div class="empty small">指标加载中…</div>
+          </div>
+        </section>
+
+        <section class="panel home-card">
+          <div class="home-card-head">
+            <span class="home-card-title">作业流程</span>
+          </div>
+          <ol class="home-flow" id="home-flow"></ol>
+        </section>
+
+        <section class="panel home-card">
+          <div class="home-card-head">
+            <span class="home-card-title">最新告警</span>
+          </div>
+          <div class="home-alerts" id="home-alerts">
+            <div class="empty small">告警加载中…</div>
+          </div>
+        </section>
+
+        <section class="panel home-card home-source">
+          <p class="home-source-text">缺陷图片来自公开 NEU-DET 数据集，工艺与整改数据为模拟推演</p>
+          <button class="footer-src" id="home-source-btn" type="button">数据来源</button>
+          <div class="source-pop hidden" id="home-source-pop"></div>
+        </section>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-workbench">
+      <div class="workbench">
+        <aside class="panel wb-left">
+          <div class="panel-title">样件输入</div>
+          <div class="upload-box">
+            <input type="file" id="file-input" accept="image/*" hidden>
+            <button class="btn btn-ghost" id="upload-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="M7 10l5-5 5 5"/><path d="M5 19h14"/></svg>上传图片</button>
+            <button class="btn btn-primary" id="load-demo-btn">载入样件</button>
+            <div class="hint">支持 jpg / png，单张不超过 10MB</div>
+          </div>
+          <div class="samples" id="samples">
+            <div class="empty small">正在载入样件…</div>
+          </div>
+        </aside>
+
+        <div class="wb-right">
+          <section class="panel" id="result-panel">
+            <div class="panel-title">识别结果</div>
+            <div class="empty guide-card" id="result-empty">
+              <div class="empty-title">等待检测</div>
+              <div class="empty-sub">载入样件后按阶段推进</div>
+              <div class="guide-line">选样件 · 看识别结果 · 去归因诊断</div>
+              <button class="btn" id="guide-load-btn">载入样件</button>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <section class="panel records-panel" id="records-panel">
+        <div class="panel-head records-head" id="records-head" role="button" tabindex="0" aria-expanded="false" aria-controls="records-body-wrap">
+          <div class="panel-title" id="records-title">检测记录（0 条）</div>
+          <div class="panel-sub">
+            <span class="collapse-toggle" id="records-toggle">展开</span>
+          </div>
+        </div>
+        <div class="records-body hidden" id="records-body-wrap">
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>时间</th>
+                  <th>图片名</th>
+                  <th>缺陷类型</th>
+                  <th>置信度</th>
+                  <th>严重等级</th>
+                  <th>推理通道</th>
+                </tr>
+              </thead>
+              <tbody id="records-body">
+                <tr><td colspan="6" class="empty-cell">正在载入检测记录…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pager" id="records-pager"></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="view hidden" id="view-attribution">
+      <div class="panel attr-guide hidden" id="attr-guide">
+        <div class="attr-guide-title">请选择样件</div>
+        <div class="attr-guide-sub">载入样件后自动填充</div>
+        <button class="btn btn-ghost" id="attr-guide-btn">去检测工作台</button>
+      </div>
+      <section class="panel context-panel" id="context-panel">
+        <div class="panel-head">
+          <div class="panel-title">工艺上下文</div>
+        </div>
+        <div class="context-toolbar">
+          <label class="field-inline">
+            <span class="field-label">缺陷类型</span>
+            <select id="defect-select"></select>
+          </label>
+          <label class="field-inline">
+            <span class="field-label">载入典型场景</span>
+            <select id="scenario-select"></select>
+          </label>
+          <button class="btn btn-ghost" id="load-scenario-btn">载入</button>
+        </div>
+        <div class="context-form" id="context-form">
+          <div class="empty small">正在载入工艺参数…</div>
+        </div>
+        <button class="btn btn-primary btn-block" id="run-attr-btn">开始归因</button>
+      </section>
+      <div id="attr-body" style="margin-top:16px">
+        <div class="panel placeholder-panel">
+          <div class="empty">
+            <div class="empty-title">正在载入归因样例…</div>
+            <div class="empty-sub">请稍候</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-knowledge">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">知识库 · 行业规则</div>
+        </div>
+        <div class="toolbar">
+          <label class="field-inline">
+            <span class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 12h12"/><path d="M9 18h6"/></svg>按缺陷类型筛选</span>
+            <select id="kb-filter"></select>
+          </label>
+          <button class="btn btn-primary ml-auto" id="kb-add-btn">新增规则</button>
+        </div>
+        <div id="kb-list" class="kb-list">
+          <div class="empty small">正在载入规则…</div>
+        </div>
+        <div class="pager" id="kb-pager"></div>
+      </div>
+      <div id="kb-editor"></div>
+    </section>
+
+    <section class="view hidden" id="view-ticket">
+      <div class="panel">
+        <div class="panel-head">
+          <div class="panel-title">整改工单</div>
+          <div class="panel-sub" id="wo-source">待处理 → 处理中 → 已完成 → 已关闭</div>
+        </div>
+        <div class="toolbar toolbar-right">
+          <label class="field-inline">
+            <span class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 12h12"/><path d="M9 18h6"/></svg>按状态筛选</span>
+            <select id="wo-status-filter"></select>
+          </label>
+          <label class="field-inline">
+            <span class="field-label"><svg class="icon" viewBox="0 0 24 24"><path d="M3 6h18"/><path d="M6 12h12"/><path d="M9 18h6"/></svg>按根因维度筛选</span>
+            <select id="wo-dim-filter"></select>
+          </label>
+        </div>
+        <div id="wo-list" class="wo-list">
+          <div class="empty small">正在载入工单…</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-verify">
+      <div class="verify-tag-row">
+        <span class="tag-sim">推演</span>
+      </div>
+
+      <div class="subtabs" id="verify-tabs">
+        <button class="subtab active" data-tab="run">复检推演</button>
+        <button class="subtab" data-tab="history">历史</button>
+      </div>
+
+      <div class="subpane" data-pane="run">
+      <div class="cl-prereq" id="cl-prereq">
+        <div class="cl-prereq-text" id="cl-prereq-text">正在检查可纳入验证的整改项…</div>
+        <button class="btn btn-ghost btn-sm hidden" id="cl-prereq-go">去整改工单</button>
+      </div>
+
+      <div class="cl-band" id="cl-band">
+        <div class="cl-band-card">
+          <div class="cl-band-label">复检前缺陷率</div>
+          <div class="cl-band-value cl-before" id="cl-band-before">—</div>
+        </div>
+        <div class="cl-band-card">
+          <div class="cl-band-label">复检后缺陷率</div>
+          <div class="cl-band-value cl-after" id="cl-band-after">—</div>
+        </div>
+        <div class="cl-band-card">
+          <div class="cl-band-label">降幅</div>
+          <div class="cl-band-value" id="cl-band-drop">—</div>
+        </div>
+        <div class="cl-band-card">
+          <div class="cl-band-label">判定</div>
+          <div class="cl-band-verdict" id="cl-band-verdict"><span class="tag tag-normal">—</span></div>
+        </div>
+      </div>
+
+      <div id="cl-result"></div>
+
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-head">
+          <div class="panel-title">复检操作</div>
+          <div class="panel-sub" id="cl-source">选择复检范围并确认纳入验证的整改项</div>
+        </div>
+        <div class="cl-ops-step">
+          <div class="cl-step-title">第 1 步 选择复检范围</div>
+          <div class="cl-controls">
+            <label class="field-inline">
+              <span class="field-label">批次</span>
+              <select id="cl-batch"></select>
+            </label>
+            <label class="field-inline">
+              <span class="field-label">样本量</span>
+              <input class="num" type="number" id="cl-sample" value="200" min="1" step="10">
+            </label>
+          </div>
+        </div>
+        <div class="cl-ops-step">
+          <div class="cl-step-title">第 2 步 确认纳入验证的整改项</div>
+          <div id="cl-measures" class="cl-measures">
+            <div class="empty small">正在载入措施清单…</div>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-block" id="cl-run-btn">开始复检推演</button>
+      </div>
+      </div>
+
+      <div class="subpane hidden" data-pane="history">
+        <div class="panel">
+          <div class="panel-head">
+            <div class="panel-title">复检历史</div>
+            <div class="panel-sub">每页最多 10 条</div>
+          </div>
+          <div id="cl-runs" class="cl-runs">
+            <div class="empty small">暂无复检记录</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-dashboard">
+      <div class="block-head">
+        <div class="panel-title">核心指标</div>
+        <span class="info-dot" id="kpi-info"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor" stroke="none"/></svg></span>
+      </div>
+      <div class="dash-cards" id="dash-cards">
+        <div class="empty small">正在载入看板数据…</div>
+      </div>
+
+      <div class="dash-charts">
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">缺陷类型分布</div></div>
+          <div class="dash-chart" id="dash-defect-pie"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">严重等级分布</div></div>
+          <div class="dash-chart" id="dash-sev-ring"></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><div class="panel-title">根因维度分布</div></div>
+          <div class="dash-chart" id="dash-dim"></div>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-head">
+          <div class="panel-title" id="dash-trend-title">缺陷率趋势</div>
+          <span class="info-dot hidden" id="dash-trend-info" title=""><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor" stroke="none"/></svg></span>
+        </div>
+        <div class="dash-chart wide" id="dash-trend"></div>
+      </div>
+
+      <div class="panel" style="margin-top:12px">
+        <div class="panel-head">
+          <div class="panel-title">Top5 根因排行</div>
+        </div>
+        <div id="dash-top">
+          <div class="empty small">正在载入根因排行…</div>
+        </div>
+      </div>
+    </section>
+      </main>
+
+      <footer class="site-footer">
+        <span class="footer-line">© 2026 · 钢材表面质量缺陷智能归因与闭环处置平台 · <button class="footer-src" id="data-source-btn" type="button">数据来源</button></span>
+        <div class="source-pop hidden" id="source-pop">
+          <div class="source-pop-title">数据来源与口径</div>
+          <ul class="source-list">
+            <li>指标与看板：由平台样例数据离线计算，用于功能演示。</li>
+            <li>缺陷图片：来自公开 NEU-DET 数据集。</li>
+            <li>工艺参数与闭环推演：为模拟数据，已在就近位置标注。</li>
+            <li>知识库：30 条行业冶金规则。</li>
+            <li>Top5 根因：按评测记录的真实根因统计。</li>
+          </ul>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <div class="drawer-mask hidden" id="drawer-mask"></div>
+  <aside class="drawer hidden" id="help-drawer" aria-label="帮助">
+    <div class="drawer-head">
+      <div class="drawer-title">帮助</div>
+      <button class="drawer-close" id="drawer-close" aria-label="关闭">×</button>
+    </div>
+    <div class="drawer-body">
+      <section class="help-sec">
+        <div class="help-sec-title">一分钟上手</div>
+        <ul class="help-list">
+          <li>点击下方「新手导览」，自动串联五个环节</li>
+          <li>载入样件</li>
+          <li>查看识别结果</li>
+          <li>填工艺参数并开始归因</li>
+          <li>生成整改工单，开始复检看降幅</li>
+        </ul>
+      </section>
+      <section class="help-sec">
+        <div class="help-sec-title">七个页面在做什么</div>
+        <ul class="help-list">
+          <li><b>首页</b>：总览指标、流程与最新告警，快速进入各环节</li>
+          <li><b>检测工作台</b>：上传图片识别六类缺陷</li>
+          <li><b>归因诊断</b>：结合工艺参数定位根因，给四维贡献度</li>
+          <li><b>知识库</b>：30 条冶金规则，可增删改启停</li>
+          <li><b>整改工单</b>：归因结论转工单并跟踪状态</li>
+          <li><b>闭环验证</b>：整改后复检，验证缺陷率是否下降</li>
+          <li><b>分析看板</b>：全局指标、分布与趋势</li>
+        </ul>
+      </section>
+      <p class="drawer-note">关于数据：缺陷图片来自公开 NEU-DET 数据集，工艺数据为模拟推演并已就近标注。</p>
+      <div class="drawer-foot">
+        <button class="drawer-demo-link" id="help-demo-link" type="button">新手导览</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+  <script src="/static/js/app.js"></script>
+</body>
+</html>
