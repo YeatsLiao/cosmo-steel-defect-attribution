@@ -4,6 +4,18 @@
 
 **技术栈**：Python 3 · FastAPI · Uvicorn · ONNX Runtime · 原生 HTML/CSS/JS（无前端构建）。
 
+## 产品预览
+
+<p align="center">
+  <img src="resources/brand-design/cosmo-upload/00-cover-main.jpg" alt="钢迹智析 · 钢材表面缺陷智能归因与闭环处置" width="100%" />
+</p>
+
+<p align="center">
+  <img src="resources/brand-design/cosmo-upload/01-site-detect.jpg" alt="缺陷识别与热力归因" width="32%" />
+  <img src="resources/brand-design/cosmo-upload/02-site-closed-loop.jpg" alt="整改工单与闭环验证" width="32%" />
+  <img src="resources/brand-design/cosmo-upload/03-site-dashboard.jpg" alt="分析看板" width="32%" />
+</p>
+
 ---
 
 ## 快速启动
