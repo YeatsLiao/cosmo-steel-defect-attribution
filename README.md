@@ -7,13 +7,13 @@
 ## 产品预览
 
 <p align="center">
-  <img src="resources/brand-design/cosmo-upload/00-cover-main.jpg" alt="钢迹智析 · 钢材表面缺陷智能归因与闭环处置" width="100%" />
+  <img src="resources/showcase/00-cover-main.jpg" alt="钢迹智析 · 钢材表面缺陷智能归因与闭环处置" width="100%" />
 </p>
 
 <p align="center">
-  <img src="resources/brand-design/cosmo-upload/01-site-detect.jpg" alt="缺陷识别与热力归因" width="32%" />
-  <img src="resources/brand-design/cosmo-upload/02-site-closed-loop.jpg" alt="整改工单与闭环验证" width="32%" />
-  <img src="resources/brand-design/cosmo-upload/03-site-dashboard.jpg" alt="分析看板" width="32%" />
+  <img src="resources/showcase/01-site-detect.jpg" alt="缺陷识别与热力归因" width="32%" />
+  <img src="resources/showcase/02-site-closed-loop.jpg" alt="整改工单与闭环验证" width="32%" />
+  <img src="resources/showcase/03-site-dashboard.jpg" alt="分析看板" width="32%" />
 </p>
 
 ---
@@ -54,6 +54,7 @@ steel-defect-attribution/
 ├── backend/            # Python 业务与推理
 ├── data/               # 种子 JSON、样件、模型、运行时库与上传（见 data/README.md）
 ├── static/             # 生产前端（含 static/brand Logo 与 favicon）
+├── resources/          # 素材：展示图、视频、文章、提示词、复现脚本（见 resources/README.md）
 └── docs/               # 架构说明、视觉规范
 ```
 
@@ -65,6 +66,10 @@ steel-defect-attribution/
 | 看板 KPI | `data/platform_data.json`（离线评测，接口带 `source` 说明） |
 
 详细分层见 [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)，视觉规范见 [`docs/style_guide.md`](docs/style_guide.md)。
+
+## 复现与素材
+
+数据、模型、提示词、文章配图都在 `resources/`，清单与复现步骤见 [`resources/README.md`](resources/README.md)。
 
 ---
 

@@ -1,0 +1,11 @@
+path: D:/2.Project/卡奥斯2026智能应用开发者大赛/03参赛作品-质量缺陷归因/01-数据/NEU-DET-src/data/NEU-DET
+train: train/images
+val: test/images
+test: test/images
+names:
+  0: crazing
+  1: inclusion
+  2: patches
+  3: pitted_surface
+  4: rolled-in_scale
+  5: scratches

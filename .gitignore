@@ -60,3 +60,7 @@ data/annotated/
 uploads/
 annotated/
 app.pid
+
+# 视频录制的中间产物，只保留成片
+resources/video/_*_tmp/
+resources/**/*.webm
