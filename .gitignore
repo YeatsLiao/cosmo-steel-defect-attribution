@@ -43,13 +43,20 @@ credentials.json
 
 # Logs
 *.log
+_srv*.log
 logs/
+
+# Agent / IDE local notes
+.cosmocode/
 
 # Dependencies
 vendor/
 
 # Runtime data
 data.db
+data/app.db
+data/uploads/
+data/annotated/
 uploads/
 annotated/
 app.pid
