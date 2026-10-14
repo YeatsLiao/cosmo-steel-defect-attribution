@@ -1,0 +1,242 @@
+[
+ {
+  "file": "crazing_01.jpg",
+  "defect": "crazing",
+  "defect_cn": "龟裂",
+  "confidence": 0.5522,
+  "source": "crazing_283.jpg",
+  "description": "龟裂典型样例，模型置信度 55.2%"
+ },
+ {
+  "file": "crazing_02.jpg",
+  "defect": "crazing",
+  "defect_cn": "龟裂",
+  "confidence": 0.5249,
+  "source": "crazing_297.jpg",
+  "description": "龟裂典型样例，模型置信度 52.5%"
+ },
+ {
+  "file": "crazing_03.jpg",
+  "defect": "crazing",
+  "defect_cn": "龟裂",
+  "confidence": 0.4988,
+  "source": "crazing_280.jpg",
+  "description": "龟裂典型样例，模型置信度 49.9%"
+ },
+ {
+  "file": "crazing_04.jpg",
+  "defect": "crazing",
+  "defect_cn": "龟裂",
+  "confidence": 0.4785,
+  "source": "crazing_277.jpg",
+  "description": "龟裂典型样例，模型置信度 47.9%"
+ },
+ {
+  "file": "crazing_05.jpg",
+  "defect": "crazing",
+  "defect_cn": "龟裂",
+  "confidence": 0.4597,
+  "source": "crazing_271.jpg",
+  "description": "龟裂典型样例，模型置信度 46.0%"
+ },
+ {
+  "file": "inclusion_01.jpg",
+  "defect": "inclusion",
+  "defect_cn": "夹杂",
+  "confidence": 0.8555,
+  "source": "inclusion_276.jpg",
+  "description": "夹杂典型样例，模型置信度 85.5%"
+ },
+ {
+  "file": "inclusion_02.jpg",
+  "defect": "inclusion",
+  "defect_cn": "夹杂",
+  "confidence": 0.8149,
+  "source": "inclusion_277.jpg",
+  "description": "夹杂典型样例，模型置信度 81.5%"
+ },
+ {
+  "file": "inclusion_03.jpg",
+  "defect": "inclusion",
+  "defect_cn": "夹杂",
+  "confidence": 0.8091,
+  "source": "inclusion_293.jpg",
+  "description": "夹杂典型样例，模型置信度 80.9%"
+ },
+ {
+  "file": "inclusion_04.jpg",
+  "defect": "inclusion",
+  "defect_cn": "夹杂",
+  "confidence": 0.7842,
+  "source": "inclusion_291.jpg",
+  "description": "夹杂典型样例，模型置信度 78.4%"
+ },
+ {
+  "file": "inclusion_05.jpg",
+  "defect": "inclusion",
+  "defect_cn": "夹杂",
+  "confidence": 0.7676,
+  "source": "inclusion_297.jpg",
+  "description": "夹杂典型样例，模型置信度 76.8%"
+ },
+ {
+  "file": "patches_01.jpg",
+  "defect": "patches",
+  "defect_cn": "斑块",
+  "confidence": 0.9072,
+  "source": "patches_280.jpg",
+  "description": "斑块典型样例，模型置信度 90.7%"
+ },
+ {
+  "file": "patches_02.jpg",
+  "defect": "patches",
+  "defect_cn": "斑块",
+  "confidence": 0.9062,
+  "source": "patches_296.jpg",
+  "description": "斑块典型样例，模型置信度 90.6%"
+ },
+ {
+  "file": "patches_03.jpg",
+  "defect": "patches",
+  "defect_cn": "斑块",
+  "confidence": 0.9062,
+  "source": "patches_294.jpg",
+  "description": "斑块典型样例，模型置信度 90.6%"
+ },
+ {
+  "file": "patches_04.jpg",
+  "defect": "patches",
+  "defect_cn": "斑块",
+  "confidence": 0.8994,
+  "source": "patches_298.jpg",
+  "description": "斑块典型样例，模型置信度 89.9%"
+ },
+ {
+  "file": "patches_05.jpg",
+  "defect": "patches",
+  "defect_cn": "斑块",
+  "confidence": 0.8926,
+  "source": "patches_295.jpg",
+  "description": "斑块典型样例，模型置信度 89.3%"
+ },
+ {
+  "file": "pitted_surface_01.jpg",
+  "defect": "pitted_surface",
+  "defect_cn": "麻点",
+  "confidence": 0.9048,
+  "source": "pitted_surface_300.jpg",
+  "description": "麻点典型样例，模型置信度 90.5%"
+ },
+ {
+  "file": "pitted_surface_02.jpg",
+  "defect": "pitted_surface",
+  "defect_cn": "麻点",
+  "confidence": 0.894,
+  "source": "pitted_surface_291.jpg",
+  "description": "麻点典型样例，模型置信度 89.4%"
+ },
+ {
+  "file": "pitted_surface_03.jpg",
+  "defect": "pitted_surface",
+  "defect_cn": "麻点",
+  "confidence": 0.8867,
+  "source": "pitted_surface_287.jpg",
+  "description": "麻点典型样例，模型置信度 88.7%"
+ },
+ {
+  "file": "pitted_surface_04.jpg",
+  "defect": "pitted_surface",
+  "defect_cn": "麻点",
+  "confidence": 0.8809,
+  "source": "pitted_surface_293.jpg",
+  "description": "麻点典型样例，模型置信度 88.1%"
+ },
+ {
+  "file": "pitted_surface_05.jpg",
+  "defect": "pitted_surface",
+  "defect_cn": "麻点",
+  "confidence": 0.8296,
+  "source": "pitted_surface_272.jpg",
+  "description": "麻点典型样例，模型置信度 83.0%"
+ },
+ {
+  "file": "rolled-in_scale_01.jpg",
+  "defect": "rolled-in_scale",
+  "defect_cn": "氧化皮压入",
+  "confidence": 0.8252,
+  "source": "rolled-in_scale_293.jpg",
+  "description": "氧化皮压入典型样例，模型置信度 82.5%"
+ },
+ {
+  "file": "rolled-in_scale_02.jpg",
+  "defect": "rolled-in_scale",
+  "defect_cn": "氧化皮压入",
+  "confidence": 0.7808,
+  "source": "rolled-in_scale_277.jpg",
+  "description": "氧化皮压入典型样例，模型置信度 78.1%"
+ },
+ {
+  "file": "rolled-in_scale_03.jpg",
+  "defect": "rolled-in_scale",
+  "defect_cn": "氧化皮压入",
+  "confidence": 0.7437,
+  "source": "rolled-in_scale_280.jpg",
+  "description": "氧化皮压入典型样例，模型置信度 74.4%"
+ },
+ {
+  "file": "rolled-in_scale_04.jpg",
+  "defect": "rolled-in_scale",
+  "defect_cn": "氧化皮压入",
+  "confidence": 0.7417,
+  "source": "rolled-in_scale_299.jpg",
+  "description": "氧化皮压入典型样例，模型置信度 74.2%"
+ },
+ {
+  "file": "rolled-in_scale_05.jpg",
+  "defect": "rolled-in_scale",
+  "defect_cn": "氧化皮压入",
+  "confidence": 0.729,
+  "source": "rolled-in_scale_296.jpg",
+  "description": "氧化皮压入典型样例，模型置信度 72.9%"
+ },
+ {
+  "file": "scratches_01.jpg",
+  "defect": "scratches",
+  "defect_cn": "划痕",
+  "confidence": 0.8657,
+  "source": "scratches_280.jpg",
+  "description": "划痕典型样例，模型置信度 86.6%"
+ },
+ {
+  "file": "scratches_02.jpg",
+  "defect": "scratches",
+  "defect_cn": "划痕",
+  "confidence": 0.8438,
+  "source": "scratches_275.jpg",
+  "description": "划痕典型样例，模型置信度 84.4%"
+ },
+ {
+  "file": "scratches_03.jpg",
+  "defect": "scratches",
+  "defect_cn": "划痕",
+  "confidence": 0.8257,
+  "source": "scratches_274.jpg",
+  "description": "划痕典型样例，模型置信度 82.6%"
+ },
+ {
+  "file": "scratches_04.jpg",
+  "defect": "scratches",
+  "defect_cn": "划痕",
+  "confidence": 0.8091,
+  "source": "scratches_298.jpg",
+  "description": "划痕典型样例，模型置信度 80.9%"
+ },
+ {
+  "file": "scratches_05.jpg",
+  "defect": "scratches",
+  "defect_cn": "划痕",
+  "confidence": 0.7944,
+  "source": "scratches_276.jpg",
+  "description": "划痕典型样例，模型置信度 79.4%"
+ }
+]

@@ -182,10 +182,9 @@ def load_kb(path):
 if __name__ == "__main__":
     import pprint
 
-    here = Path(__file__).parent
-    for cand in (here / "knowledge_base.json",
-                 here.parent / "01-数据" / "knowledge_base.json",
-                 here.parent / "knowledge_base.json"):
+    from .paths import KB_PATH, ROOT
+
+    for cand in (KB_PATH, ROOT / "01-数据" / "knowledge_base.json", ROOT / "knowledge_base.json"):
         if cand.exists():
             kb = load_kb(cand)
             break

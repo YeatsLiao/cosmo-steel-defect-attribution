@@ -7,18 +7,12 @@
 4. 对缺失字段涉及的维度做「数据不足」标注与贡献度再归一化。
 """
 import json
-from pathlib import Path
 
-import attribution_engine as ae
-import db
-import fields
-import suggestion_service
-
-BASE_DIR = Path(__file__).parent
-DB_PATH = BASE_DIR / "data.db"
-KB_PATH = BASE_DIR / "knowledge_base.json"
-RECORDS_PATH = BASE_DIR / "records.json"
-PLATFORM_DATA_PATH = BASE_DIR / "platform_data.json"
+from . import attribution_engine as ae
+from . import db
+from . import fields
+from . import suggestion_service
+from .paths import DB_PATH, KB_PATH, PLATFORM_DATA_PATH, RECORDS_PATH
 
 FIELD_META = fields.FIELD_META
 FIELD_DIM = fields.FIELD_DIM

@@ -7,7 +7,7 @@ import json
 import sqlite3
 from pathlib import Path
 
-import fields
+from . import fields
 
 HISTORY_LIMIT = 200
 

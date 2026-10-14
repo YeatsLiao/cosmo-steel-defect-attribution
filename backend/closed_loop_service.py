@@ -15,10 +15,7 @@
 import json
 from pathlib import Path
 
-BASE_DIR = Path(__file__).parent
-RECORDS_PATH = BASE_DIR / "records.json"
-PLATFORM_DATA_PATH = BASE_DIR / "platform_data.json"
-KB_PATH = BASE_DIR / "knowledge_base.json"
+from .paths import KB_PATH, PLATFORM_DATA_PATH, RECORDS_PATH
 
 CLASS_KEYS = ["crazing", "inclusion", "patches", "pitted_surface", "rolled-in_scale", "scratches"]
 CLASS_CN = {
@@ -94,25 +91,91 @@ def _count_defects(chunk):
     return counts
 
 
+def _batch_item(key, label, chunk, is_all=False):
+    counts = _count_defects(chunk)
+    defect_counts = {CLASS_CN[k]: counts[k] for k in CLASS_KEYS}
+    if not chunk:
+        date_range = "—"
+    else:
+        date_range = f"{chunk[0]['inspect_time'][:10]} ~ {chunk[-1]['inspect_time'][:10]}"
+    return {
+        "key": key,
+        "label": label,
+        "date_range": date_range,
+        "size": len(chunk),
+        "is_all": is_all,
+        "defect_counts": defect_counts,
+    }
+
+
 def list_batches():
     recs = _sorted_records()
     chunks = _split_batches(recs)
-    items = [{
-        "key": "ALL",
-        "label": f"整体 · 数据集 {len(recs)} 件",
-        "date_range": f"{recs[0]['inspect_time'][:10]} ~ {recs[-1]['inspect_time'][:10]}",
-        "size": len(recs),
-        "is_all": True,
-    }]
+    items = [
+        _batch_item(
+            "ALL",
+            f"整体 · 数据集 {len(recs)} 件",
+            recs,
+            is_all=True,
+        )
+    ]
     for i, chunk in enumerate(chunks):
+        items.append(_batch_item(f"B{i + 1}", f"批次 B{i + 1}", chunk, is_all=False))
+    return {
+        "items": items,
+        "default_sample": DEFAULT_SAMPLE,
+        "source": "records.json",
+        "split_rule": f"按检测时间排序后均分为 {BATCH_COUNT} 段，用于闭环验证推演",
+    }
+
+
+def _chunk_for_key(key):
+    recs = _sorted_records()
+    if not recs:
+        return None, None
+    if key == "ALL":
+        return recs, _batch_item("ALL", f"整体 · 数据集 {len(recs)} 件", recs, is_all=True)
+    if key and key.startswith("B"):
+        try:
+            idx = int(key[1:]) - 1
+        except ValueError:
+            return None, None
+        chunks = _split_batches(recs)
+        if idx < 0 or idx >= len(chunks):
+            return None, None
+        chunk = chunks[idx]
+        return chunk, _batch_item(key, f"批次 {key}", chunk, is_all=False)
+    return None, None
+
+
+def batch_records(key, limit=50, offset=0):
+    """返回某批次内的检测记录（来自 records.json，与闭环推演口径一致）。"""
+    limit = max(1, min(int(limit or 50), 200))
+    offset = max(0, int(offset or 0))
+    chunk, meta = _chunk_for_key(key)
+    if chunk is None or meta is None:
+        return None
+    page = chunk[offset : offset + limit]
+    items = []
+    for r in page:
+        dt = r.get("defect_type")
         items.append({
-            "key": f"B{i + 1}",
-            "label": f"批次 B{i + 1}",
-            "date_range": f"{chunk[0]['inspect_time'][:10]} ~ {chunk[-1]['inspect_time'][:10]}",
-            "size": len(chunk),
-            "is_all": False,
+            "record_id": r.get("record_id") or "",
+            "inspect_time": r.get("inspect_time") or "",
+            "steel_grade": r.get("steel_grade") or "",
+            "defect_type": dt or "",
+            "defect_cn": CLASS_CN.get(dt, dt or ""),
+            "confidence": round(float(r.get("confidence") or 0), 4),
+            "severity": r.get("severity") or "",
         })
-    return {"items": items, "default_sample": DEFAULT_SAMPLE}
+    return {
+        "batch": meta,
+        "total": len(chunk),
+        "limit": limit,
+        "offset": offset,
+        "items": items,
+        "source": "records.json",
+    }
 
 
 def _representative_solutions(rules):
@@ -176,6 +239,7 @@ def verify(batch_key="ALL", sample_size=DEFAULT_SAMPLE, executed=None, rules=Non
         executed = [k for k in CLASS_KEYS if before_counts.get(k)]
     executed_set = set(executed)
     executed_drops = executed_drops or {}
+    use_order_drops = bool(executed_drops)
 
     def _class_drop(k):
         """缺陷类的综合预期降幅：有已执行建议则按 1-Π(1-d) 累乘，否则取知识库推演综合值。"""
@@ -232,8 +296,8 @@ def verify(batch_key="ALL", sample_size=DEFAULT_SAMPLE, executed=None, rules=Non
             })
 
     all_executed = all((k not in CLASS_KEYS) or (k in executed_set) for k in CLASS_KEYS if before_counts.get(k))
-    if is_all and all_executed:
-        # 全类标准整改方案：采用离线推演基准，与平台文档 39.17%→29.12% 完全一致
+    if is_all and all_executed and not use_order_drops:
+        # 未指定工单降幅时：全类标准整改方案对齐离线推演基准 39.17%→29.12%
         before_total_defects = sum(p.get("before", 0.0) for p in params.values())
         after_total_defects = sum(p.get("after_est", 0.0) for p in params.values())
         before_rate = float(cl.get("before_rate", 0.0))
@@ -309,5 +373,5 @@ def verify(batch_key="ALL", sample_size=DEFAULT_SAMPLE, executed=None, rules=Non
         "thresholds": {"effective": 20, "significant": 30},
         "disclaimer": DISCLAIMER,
         "disclaimer_next": DISCLAIMER_NEXT,
-        "source": "推演口径：整改前缺陷率取 records.json 实测分布；归因正确率与预期降幅取 platform_data.json 离线推演基准",
+        "source": "推演口径：整改前缺陷率取 records.json 实测分布；归因正确率取 platform_data.json；预期降幅优先取本次纳入工单对应知识库规则（同类累乘），否则取离线综合值",
     }

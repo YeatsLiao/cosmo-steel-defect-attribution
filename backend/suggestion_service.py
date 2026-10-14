@@ -7,7 +7,7 @@
 """
 import re
 
-import db
+from . import db
 
 VAGUE_WORDS = ["加强", "重视", "意识", "责任心"]
 

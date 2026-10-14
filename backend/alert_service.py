@@ -52,10 +52,11 @@ def list_alerts(records, window_hours=WINDOW_HOURS, threshold=TYPE_THRESHOLD, no
 
     severe = [r for r in window if r.get("severity") == "严重"]
     if severe:
+        severe.sort(key=lambda r: _parse(r.get("ts")) or datetime.min, reverse=True)
         latest = severe[0]
         items.append({
             "level": "severe",
-            "title": f"检出「严重」等级缺陷（{len(severe)} 件）",
+            "title": f"检出「严重」等级缺陷（近 {window_hours} 小时 {len(severe)} 件）",
             "detail": f"最近一例：{latest.get('defect_cn')} · {latest.get('ts')} · 置信度 {float(latest.get('confidence') or 0) * 100:.1f}%",
         })
 

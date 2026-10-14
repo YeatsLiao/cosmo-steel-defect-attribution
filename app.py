@@ -1,7 +1,7 @@
-"""钢材质量缺陷归因与闭环处置平台 —— FastAPI 后端。
+"""钢材表面质量缺陷智能归因与闭环处置平台 — FastAPI 入口。
 
-本轮实现：顶部指标、检测工作台（三通道识别：实时推理 / 离线评测 / 报错）、检测记录表。
-其余模块（归因诊断 / 知识库 / 整改工单 / 闭环验证 / 分析看板）预留导航位，后续迭代实现。
+单进程 Web 服务：静态 SPA（static/）+ REST API；检测推理（ONNX）、规则归因、工单与闭环推演、看板与告警。
+部署：Cosmo 平台执行 start.sh，uvicorn app:app 监听 8000。
 """
 import json
 import os
@@ -12,22 +12,24 @@ from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 
-import db
-from detector import Detector, CLASSES, CLASS_CN
-import attribute_service
-import suggestion_service
-import qa_service
-import fields
-import closed_loop_service
-import dashboard_service
-import alert_service
-
-BASE_DIR = Path(__file__).parent
+from backend import alert_service, attribute_service, closed_loop_service, dashboard_service, db, fields, qa_service, suggestion_service
+from backend.detector import CLASS_CN, CLASSES, Detector
+from backend.paths import (
+    ANNOTATED_DIR,
+    DB_PATH,
+    DEMO_DIR,
+    KB_PATH,
+    PLATFORM_DATA_PATH,
+    RECORDS_PATH,
+    ROOT,
+    STATIC_DIR,
+    UPLOAD_DIR,
+)
 
 
 def _load_dotenv():
     """从项目根目录 .env 载入配置（不覆盖已存在的环境变量）。"""
-    env_path = BASE_DIR / ".env"
+    env_path = ROOT / ".env"
     if not env_path.exists():
         return
     for line in env_path.read_text(encoding="utf-8").splitlines():
@@ -42,19 +44,10 @@ def _load_dotenv():
 
 _load_dotenv()
 
-DB_PATH = BASE_DIR / "data.db"
-RECORDS_PATH = BASE_DIR / "records.json"
-KB_PATH = BASE_DIR / "knowledge_base.json"
-PLATFORM_DATA_PATH = BASE_DIR / "platform_data.json"
-STATIC_DIR = BASE_DIR / "static"
-DEMO_DIR = BASE_DIR / "demo_images"
-UPLOAD_DIR = BASE_DIR / "uploads"
-ANNOTATED_DIR = BASE_DIR / "annotated"
-
-UPLOAD_DIR.mkdir(exist_ok=True)
-ANNOTATED_DIR.mkdir(exist_ok=True)
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+ANNOTATED_DIR.mkdir(parents=True, exist_ok=True)
 db.init_db(DB_PATH, RECORDS_PATH, KB_PATH)
-detector = Detector(BASE_DIR)
+detector = Detector()
 
 app = FastAPI(title="钢材质量缺陷归因与闭环处置平台")
 
@@ -323,9 +316,22 @@ async def work_order_status(order_id: int, payload: dict):
 _CLS_FROM_CN = {cn: key for key, cn in closed_loop_service.CLASS_CN.items()}
 
 
-def _executed_drops_from_orders():
-    """汇总已执行整改工单（状态非待处理）对应建议的预期降幅，按缺陷类分组，供累乘。"""
+_VERIFY_WO_STATUS = {"已解决", "已关闭"}
+
+
+def _executed_drops_from_orders(order_ids=None):
+    """按缺陷类汇总工单绑定知识库规则的预期降幅（0–1），同类多条按累乘口径传入 verify。"""
     drops = {}
+    id_set = None
+    if order_ids is not None:
+        id_set = set()
+        for oid in order_ids:
+            try:
+                id_set.add(int(oid))
+            except (TypeError, ValueError):
+                continue
+        if not id_set:
+            return drops
     try:
         orders = db.list_work_orders(DB_PATH)
     except Exception:
@@ -335,7 +341,12 @@ def _executed_drops_from_orders():
     for r in rules:
         by_cause.setdefault(r.get("root_cause"), r)
     for o in orders:
-        if o.get("status") == "待处理":
+        if id_set is not None:
+            if o.get("id") not in id_set:
+                continue
+            if o.get("status") not in _VERIFY_WO_STATUS:
+                continue
+        elif o.get("status") == "待处理":
             continue
         key = _CLS_FROM_CN.get(o.get("defect_cn"))
         if not key:
@@ -350,6 +361,14 @@ def _executed_drops_from_orders():
 @app.get("/api/closed-loop/batches")
 def closed_loop_batches():
     return closed_loop_service.list_batches()
+
+
+@app.get("/api/closed-loop/batches/{batch_key}")
+def closed_loop_batch_detail(batch_key: str, limit: int = 50, offset: int = 0):
+    data = closed_loop_service.batch_records(batch_key, limit=limit, offset=offset)
+    if data is None:
+        raise HTTPException(status_code=404, detail="未知批次")
+    return data
 
 
 @app.get("/api/closed-loop/runs")
@@ -380,7 +399,10 @@ async def closed_loop_verify(payload: dict):
         sample_size = closed_loop_service.DEFAULT_SAMPLE
     executed = data.get("executed")
     rules = db.list_kb_rules(DB_PATH, enabled_only=True)
-    executed_drops = _executed_drops_from_orders() if data.get("use_work_orders") else {}
+    order_ids = data.get("order_ids") or []
+    executed_drops = {}
+    if data.get("use_work_orders") and order_ids:
+        executed_drops = _executed_drops_from_orders(order_ids=order_ids)
     result = closed_loop_service.verify(
         batch_key=batch_key,
         sample_size=sample_size,
@@ -421,7 +443,8 @@ async def work_order_rectify(order_id: int):
     return {"order": order, "next": "closed-loop"}
 
 
-# ---------- 自然语言问答 ----------@app.post("/api/qa")
+# ---------- 自然语言问答 ----------
+@app.post("/api/qa")
 async def qa(payload: dict):
     data = payload or {}
     question = (data.get("question") or "").strip()
@@ -482,8 +505,6 @@ app.mount("/uploads", StaticFiles(directory=str(UPLOAD_DIR)), name="uploads")
 app.mount("/annotated", StaticFiles(directory=str(ANNOTATED_DIR)), name="annotated")
 if STATIC_DIR.exists():
     app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
-
-
 @app.exception_handler(404)
 async def not_found(request, exc):
     if request.url.path.startswith("/api/"):

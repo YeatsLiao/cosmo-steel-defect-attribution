@@ -91,13 +91,15 @@ def _nms(boxes, scores, iou_threshold):
 
 
 class Detector:
-    def __init__(self, base_dir):
-        self.base_dir = Path(base_dir)
-        self.demo_dir = self.base_dir / "demo_images"
+    def __init__(self, base_dir=None):
+        from .paths import ROOT, DEMO_DIR, MODEL_DIR, ANNOTATED_DIR
+
+        self.base_dir = Path(base_dir or ROOT)
+        self.demo_dir = DEMO_DIR
         self.manifest_path = self.demo_dir / "manifest.json"
-        self.model_path = self.base_dir / "model" / "best_fp16.onnx"
-        self.classes_path = self.base_dir / "model" / "classes.json"
-        self.annotated_dir = self.base_dir / "annotated"
+        self.model_path = MODEL_DIR / "best_fp16.onnx"
+        self.classes_path = MODEL_DIR / "classes.json"
+        self.annotated_dir = ANNOTATED_DIR
 
         self.classes = list(CLASSES)
         if self.classes_path.exists():
@@ -344,8 +346,9 @@ if __name__ == "__main__":
     import pprint
     import sys
 
-    base = Path(__file__).parent
-    detector = Detector(base)
+    from .paths import DEMO_DIR
+
+    detector = Detector()
     pprint.pprint(detector.status())
     target = sys.argv[1] if len(sys.argv) > 1 else "crazing_01.jpg"
-    pprint.pprint(detector.detect(base / "demo_images" / target))
+    pprint.pprint(detector.detect(DEMO_DIR / target))
