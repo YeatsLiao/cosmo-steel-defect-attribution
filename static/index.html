@@ -4,17 +4,19 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>钢材表面质量缺陷智能归因与闭环处置平台</title>
+  <meta name="theme-color" content="#0E1B2E">
+  <link rel="icon" type="image/png" sizes="32x32" href="/static/brand/favicon-32.png?v=3">
+  <link rel="icon" type="image/png" sizes="16x16" href="/static/brand/favicon-16.png?v=3">
+  <link rel="apple-touch-icon" href="/static/brand/favicon-192.png?v=3">
   <link rel="stylesheet" href="/static/css/app.css">
 </head>
-<body>
+<body class="full-mode">
   <a class="skip-link" href="#main-content">跳到主内容</a>
   <header class="topnav">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#2FD4C4" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-        <path d="M12 2.5l7 3v5.2c0 4.4-3 8-7 9.3-4-1.3-7-4.9-7-9.3V5.5z"/>
-        <path d="M8.6 12.2l2.4 2.4 4.4-4.8"/>
-      </svg>
+      <img class="brand-logo" src="/static/brand/brand-logo.png?v=3" width="56" height="56" alt="" decoding="async">
       <span class="brand-title">钢材表面质量缺陷智能归因与闭环处置平台</span>
+      <span class="brand-short">钢材质量 · 智能闭环</span>
     </div>
     <div class="topnav-actions">
       <span class="topnav-clock" id="clock"></span>
@@ -23,10 +25,6 @@
         <span class="alert-badge hidden" id="alert-badge"></span>
       </button>
       <div class="alert-panel hidden" id="alert-panel"></div>
-      <button class="topnav-btn" id="help-btn" title="帮助与说明" aria-label="帮助与说明">
-        <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.3a2.6 2.6 0 1 1 3.6 2.4c-.8.4-1.21 1-1.2 1.8"/><circle cx="12" cy="17" r=".7" fill="currentColor" stroke="none"/></svg>
-        <span>帮助</span>
-      </button>
     </div>
   </header>
 
@@ -34,78 +32,27 @@
     <aside class="sidenav" id="sidenav"></aside>
     <div class="content-col">
       <div class="flow-rail hidden" id="flow-rail"></div>
+      <div class="flow-context hidden" id="flow-context"></div>
       <section class="eval-bar hidden" id="metrics"></section>
       <div class="sample-bar hidden" id="sample-bar"></div>
 
-      <main class="page" id="main-content" tabindex="-1">
+      <main class="page page-flow-host" id="main-content" tabindex="-1">
 
     <section class="view" id="view-home">
       <div class="home">
-
-        <section class="home-hero">
-          <p class="hero-eyebrow">钢材表面质量 · 智能归因与闭环处置</p>
-          <h1 class="hero-title">一张缺陷图片，走完从识别到整改验证的闭环</h1>
-          <p class="hero-sub">
-            载入钢材表面图片识别六类表面缺陷，结合当班工艺参数匹配冶金规则定位主因，
-            生成可跟踪的整改工单，整改后复检推演缺陷率变化。用于热轧表面巡检、质量异议溯源与整改验收。
-          </p>
-          <div class="hero-actions">
-            <button class="btn btn-primary btn-lg" id="home-start-btn">开始诊断</button>
-            <button class="btn btn-ghost btn-lg" id="home-cap-btn">看它能做什么</button>
+        <article class="home-card">
+          <div class="home-card-copy">
+            <h1 class="hero-title">钢材表面质量缺陷<br>智能归因与闭环处置</h1>
+            <p class="home-card-about">选样件或上传图片，完成缺陷识别、根因分析与整改闭环推演。</p>
+            <div class="hero-actions">
+              <button class="btn btn-primary btn-lg" type="button" id="home-start-btn">开始检测</button>
+              <button class="btn btn-ghost btn-lg" type="button" id="home-dash-btn">分析看板</button>
+            </div>
           </div>
-          <ul class="hero-values">
-            <li><b>6</b><span>类表面缺陷</span></li>
-            <li><b>30</b><span>条冶金根因规则</span></li>
-            <li><b>4</b><span>个根因维度</span></li>
-            <li><b>4</b><span>步闭环流程</span></li>
-          </ul>
-        </section>
-
-        <section class="home-section" id="home-cap">
-          <div class="section-head">
-            <h2 class="section-title">平台能力</h2>
-            <span class="section-sub">三个环节串成一条闭环</span>
-          </div>
-          <div class="cap-grid">
-            <article class="cap-card" data-view="workbench" role="button" tabindex="0">
-              <div class="cap-shot"><img src="/static/img/cap-detect.png" alt="检测工作台界面截图：样件库与缺陷识别结果" loading="lazy"></div>
-              <div class="cap-body">
-                <span class="cap-step">环节一</span>
-                <h3 class="cap-title">缺陷识别</h3>
-                <p class="cap-text">载入表面图片或本地上传，模型输出缺陷类型、置信度与严重等级，并在图上标出缺陷位置。</p>
-              </div>
-              <span class="cap-go">进入检测工作台 →</span>
-            </article>
-            <article class="cap-card" data-view="attribution" role="button" tabindex="0">
-              <div class="cap-shot"><img src="/static/img/cap-attr.png" alt="归因诊断界面截图：主因结论与四维贡献度" loading="lazy"></div>
-              <div class="cap-body">
-                <span class="cap-step">环节二</span>
-                <h3 class="cap-title">归因诊断</h3>
-                <p class="cap-text">把识别结果与当班工艺参数一起代入规则库，给出主因、四维贡献度、命中证据与整改建议。</p>
-              </div>
-              <span class="cap-go">进入归因诊断 →</span>
-            </article>
-            <article class="cap-card" data-view="verify" role="button" tabindex="0">
-              <div class="cap-shot"><img src="/static/img/cap-verify.png" alt="闭环验证界面截图：整改前后缺陷率对比与分项明细" loading="lazy"></div>
-              <div class="cap-body">
-                <span class="cap-step">环节三</span>
-                <h3 class="cap-title">整改与闭环验证</h3>
-                <p class="cap-text">结论转成整改工单跟踪责任人，整改完成后按批次复检，推演缺陷率降幅并判定整改是否有效。</p>
-              </div>
-              <span class="cap-go">进入闭环验证 →</span>
-            </article>
-          </div>
-        </section>
-
-        <section class="home-kpi">
-          <div class="home-kpi-head">
-            <span class="home-kpi-title">核心指标</span>
-            <button class="btn btn-link btn-sm" id="home-kpi-more">查看分析看板 →</button>
-          </div>
-          <div class="home-kpi-body" id="home-metrics-body">
-            <div class="empty-state small"><span class="empty-title">指标加载中…</span></div>
-          </div>
-        </section>
+          <figure class="home-card-visual">
+            <img src="/static/img/home-guide-flow.jpg" alt="四步闭环：识别、归因、工单、验证" width="1200" height="675" loading="lazy">
+          </figure>
+        </article>
       </div>
     </section>
 
@@ -114,16 +61,13 @@
         <aside class="panel wb-left">
           <div class="panel-head">
             <h2 class="panel-title">样件输入</h2>
-            <span class="panel-sub">点击样件即识别</span>
           </div>
           <div class="upload-box">
             <input type="file" id="file-input" accept="image/*" hidden>
             <button class="btn btn-ghost btn-block" id="upload-btn"><svg class="icon" viewBox="0 0 24 24"><path d="M12 16V5"/><path d="M7 10l5-5 5 5"/><path d="M5 19h14"/></svg>上传本地图片</button>
-            <p class="hint">支持 jpg / png，单张不超过 10MB。</p>
           </div>
           <div class="samples-head">
             <span class="samples-title">示例样件库</span>
-            <span class="panel-sub">六类缺陷各一组</span>
           </div>
           <div class="samples" id="samples">
             <div class="empty-state small"><span class="empty-title">正在载入样件…</span></div>
@@ -134,61 +78,23 @@
           <div class="panel-head"><h2 class="panel-title">识别结果</h2></div>
           <div class="empty-state guide-card" id="result-empty">
             <span class="empty-title">等待检测</span>
-            <span class="empty-sub">从左侧样件库选一张，或上传本地图片</span>
-            <span class="guide-line">选样件 → 看识别结果 → 去归因诊断</span>
           </div>
         </section>
       </div>
-
-      <section class="panel records-panel" id="records-panel">
-        <div class="panel-head records-head" id="records-head" role="button" tabindex="0" aria-expanded="false" aria-controls="records-body-wrap">
-          <h2 class="panel-title" id="records-title">检测记录（0 条）</h2>
-          <div class="panel-sub">
-            <span class="collapse-toggle" id="records-toggle">展开</span>
-          </div>
-        </div>
-        <div class="records-body hidden" id="records-body-wrap">
-          <div class="table-wrap">
-            <table class="data-table">
-              <thead>
-                <tr>
-                  <th>时间</th>
-                  <th>图片名</th>
-                  <th>缺陷类型</th>
-                  <th>置信度</th>
-                  <th>严重等级</th>
-                  <th>推理通道</th>
-                </tr>
-              </thead>
-              <tbody id="records-body">
-                <tr><td colspan="6" class="empty-cell">正在载入检测记录…</td></tr>
-              </tbody>
-            </table>
-          </div>
-          <div class="pager" id="records-pager"></div>
-        </div>
-      </section>
     </section>
 
     <section class="view hidden" id="view-attribution">
+      <div class="attr-grid">
       <section class="panel context-panel" id="context-panel">
-        <div class="panel-head">
-          <h2 class="panel-title">工艺上下文</h2>
-          <span class="panel-sub" id="context-state">参数表单已收起 · 使用当前参数可直接归因</span>
-          <button class="btn btn-ghost btn-sm" id="context-toggle" aria-expanded="false" aria-controls="context-form">展开参数</button>
+        <div class="panel-head context-head">
+          <h2 class="panel-title">工艺参数</h2>
+          <div class="context-head-ops">
+            <select id="defect-select" class="ctx-defect-select" aria-label="缺陷类型"></select>
+            <button class="btn btn-ghost btn-sm" type="button" id="scenario-btn">典型场景</button>
+          </div>
         </div>
-        <div class="context-toolbar">
-          <label class="field-inline">
-            <span class="field-label">缺陷类型</span>
-            <select id="defect-select"></select>
-          </label>
-          <label class="field-inline">
-            <span class="field-label">载入典型场景</span>
-            <select id="scenario-select"></select>
-          </label>
-          <button class="btn btn-ghost" id="load-scenario-btn">载入</button>
-        </div>
-        <div class="context-form hidden" id="context-form">
+        <div class="ctx-flow" id="ctx-flow" aria-live="polite"></div>
+        <div class="context-form" id="context-form">
           <div class="empty-state small"><span class="empty-title">正在载入工艺参数…</span></div>
         </div>
         <div class="run-row">
@@ -201,9 +107,9 @@
         <div class="panel placeholder-panel">
           <div class="empty-state">
             <span class="empty-title">尚未开始归因</span>
-            <span class="empty-sub">请稍候</span>
           </div>
         </div>
+      </div>
       </div>
     </section>
 
@@ -230,54 +136,146 @@
       </section>
     </section>
 
-    <section class="view hidden" id="view-verify">
-      <section class="panel step-panel">
-        <div class="step-head">
-          <span class="step-no">第 1 步</span>
-          <h2 class="panel-title">选择复检范围</h2>
-        </div>
-        <div class="cl-controls">
-          <label class="field-inline">
-            <span class="field-label">批次</span>
-            <select id="cl-batch"></select>
-          </label>
-          <label class="field-inline">
-            <span class="field-label">样本量</span>
-            <input class="num" type="number" id="cl-sample" value="200" min="1" step="10">
-          </label>
-          <span class="cl-formula">缺陷率 = 缺陷件数 ÷ 抽样样本量</span>
-        </div>
-      </section>
-
-      <section class="panel step-panel">
-        <div class="step-head">
-          <span class="step-no">第 2 步</span>
-          <h2 class="panel-title">选择纳入验证的整改工单</h2>
-          <button class="btn btn-link btn-sm step-head-link" id="cl-runs-link">复检历史 →</button>
-        </div>
-        <div class="cl-prereq" id="cl-prereq">
-          <span class="cl-prereq-text" id="cl-prereq-text">正在检查可纳入验证的整改工单…</span>
-          <button class="btn btn-ghost btn-sm hidden" id="cl-prereq-go">去整改工单</button>
-        </div>
-        <div class="cl-selbar hidden" id="cl-selbar">
-          <span class="cl-sel-text" id="cl-sel-summary">—</span>
-          <span class="cl-sel-note" id="cl-sel-note"></span>
-          <div class="cl-sel-ops">
-            <button class="btn btn-ghost btn-sm" id="cl-sel-all">全选</button>
-            <button class="btn btn-ghost btn-sm" id="cl-sel-none">清空</button>
+    <section class="view hidden history-view" id="view-detectlog">
+      <div class="history-page">
+        <div class="history-kpi" id="detectlog-kpi" aria-hidden="true"></div>
+        <section class="panel list-page-panel history-panel">
+          <header class="history-head">
+            <div class="history-head-main">
+              <h2 class="panel-title" id="records-title">检测记录</h2>
+            </div>
+            <span class="history-badge" id="records-view-count">—</span>
+          </header>
+          <div class="history-body list-page-scroll table-wrap">
+            <table class="data-table history-table">
+              <thead>
+                <tr>
+                  <th>时间</th>
+                  <th>样件</th>
+                  <th>缺陷</th>
+                  <th class="num">置信度</th>
+                  <th>等级</th>
+                  <th>通道</th>
+                </tr>
+              </thead>
+              <tbody id="records-body">
+                <tr><td colspan="6" class="empty-cell">正在载入检测记录…</td></tr>
+              </tbody>
+            </table>
           </div>
-        </div>
-        <div id="cl-measures" class="cl-measures">
-          <div class="empty-state small"><span class="empty-title">正在载入整改工单…</span></div>
-        </div>
-        <div class="cl-missing hidden" id="cl-missing"></div>
-        <div class="run-row">
-          <button class="btn btn-primary" id="cl-run-btn">开始复检推演</button>
-          <span class="run-state" id="cl-run-state"></span>
-        </div>
-      </section>
+          <footer class="history-foot pager" id="records-pager"></footer>
+        </section>
+      </div>
+    </section>
 
-      <div id="cl-result"></div>
+    <section class="view hidden" id="view-verify">
+      <div class="verify-grid">
+        <aside class="panel verify-aside">
+          <header class="cl-scope-hero">
+            <h2 class="panel-title">复检推演</h2>
+            <button class="btn btn-ghost btn-sm" type="button" id="cl-runs-link">复检历史</button>
+          </header>
+
+          <section class="cl-scope-block" aria-label="复检范围">
+            <div class="cl-scope-row">
+              <label class="cl-scope-kv">
+                <span class="cl-k">数据批次</span>
+                <select id="cl-batch"></select>
+              </label>
+              <label class="cl-scope-kv cl-scope-sample">
+                <span class="cl-k">抽样件数</span>
+                <input class="num" type="number" id="cl-sample" value="200" min="1" step="10">
+              </label>
+            </div>
+            <p class="cl-scope-meta" id="cl-scope-meta">—</p>
+          </section>
+
+          <section class="cl-orders-block">
+            <div class="cl-orders-head">
+              <h3 class="cl-orders-title">纳入工单</h3>
+            </div>
+            <div class="cl-selbar hidden" id="cl-selbar">
+              <span class="cl-sel-text" id="cl-sel-summary">—</span>
+              <div class="cl-sel-ops">
+                <button class="btn btn-ghost btn-sm" type="button" id="cl-sel-all">全选</button>
+                <button class="btn btn-ghost btn-sm" type="button" id="cl-sel-none">清空</button>
+              </div>
+            </div>
+            <div class="cl-prereq hidden" id="cl-prereq">
+              <span class="cl-prereq-text" id="cl-prereq-text"></span>
+              <button class="btn btn-ghost btn-sm hidden" type="button" id="cl-prereq-go">去整改工单</button>
+            </div>
+            <div class="cl-orders-scroll" tabindex="0" aria-label="纳入工单列表，可滚动">
+              <div id="cl-measures" class="cl-measures">
+                <div class="empty-state small"><span class="empty-title">正在载入整改工单…</span></div>
+              </div>
+              <div class="cl-missing hidden" id="cl-missing"></div>
+            </div>
+          </section>
+
+          <div class="run-row cl-run-row">
+            <button class="btn btn-primary" type="button" id="cl-run-btn">开始复检推演</button>
+            <span class="run-state" id="cl-run-state"></span>
+          </div>
+        </aside>
+        <div class="verify-main" id="cl-result"></div>
+      </div>
+    </section>
+
+    <section class="view hidden" id="view-qa">
+      <div class="qa-shell">
+        <section class="panel list-page-panel qa-panel">
+          <header class="history-head">
+            <div class="history-head-main">
+              <h2 class="panel-title">智能问答</h2>
+            </div>
+          </header>
+          <div class="qa-chips" id="qa-chips" role="group" aria-label="快捷提问"></div>
+          <div class="qa-thread list-page-scroll" id="qa-answer">
+            <p class="qa-placeholder">输入问题，或点下方快捷提问</p>
+          </div>
+          <footer class="qa-compose history-foot">
+            <div class="qa-input-row">
+              <input id="qa-input" class="qa-input" type="text" autocomplete="off" placeholder="输入问题">
+              <button class="btn btn-primary" type="button" id="qa-ask">提问</button>
+            </div>
+          </footer>
+        </section>
+      </div>
+    </section>
+
+    <section class="view hidden history-view" id="view-batches">
+      <div class="history-page">
+        <div class="history-kpi" id="batches-kpi"></div>
+        <section class="panel list-page-panel history-panel">
+          <header class="history-head">
+            <div class="history-head-main">
+              <h2 class="panel-title">数据批次</h2>
+            </div>
+            <span class="history-badge" id="batches-count">—</span>
+          </header>
+          <div class="history-toolbar batches-toolbar">
+            <button class="btn btn-primary btn-sm" type="button" id="batches-go-verify">去闭环验证</button>
+          </div>
+          <div class="history-body list-page-scroll table-wrap">
+            <table class="data-table history-table">
+              <thead>
+                <tr>
+                  <th>编号</th>
+                  <th>名称</th>
+                  <th>时间范围</th>
+                  <th class="num">件数</th>
+                  <th>缺陷分布</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="batches-body">
+                <tr><td colspan="6" class="empty-cell">正在载入批次…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+      </div>
     </section>
 
     <section class="view hidden" id="view-knowledge">
@@ -311,7 +309,6 @@
     <section class="view hidden" id="view-dashboard">
       <div class="block-head">
         <h2 class="panel-title">核心指标</h2>
-        <span class="info-dot" id="kpi-info" title="指标由平台样例数据离线计算，用于功能演示"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor" stroke="none"/></svg></span>
       </div>
       <div class="dash-cards" id="dash-cards">
         <div class="empty-state small"><span class="empty-title">正在载入看板数据…</span></div>
@@ -335,7 +332,6 @@
       <div class="panel stack-gap">
         <div class="panel-head">
           <h2 class="panel-title" id="dash-trend-title">缺陷率趋势</h2>
-          <span class="info-dot hidden" id="dash-trend-info" title=""><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><circle cx="12" cy="8" r=".7" fill="currentColor" stroke="none"/></svg></span>
         </div>
         <div class="dash-chart wide" id="dash-trend"></div>
       </div>
@@ -350,147 +346,91 @@
       </div>
     </section>
 
-    <section class="view hidden" id="view-runs">
-      <section class="panel">
-        <div class="panel-head">
-          <h2 class="panel-title">复检历史</h2>
-          <span class="panel-sub" id="runs-count">—</span>
-        </div>
-        <div class="table-wrap">
-          <table class="data-table runs-table">
+    <section class="view hidden history-view" id="view-runs">
+      <div class="history-page">
+        <div class="history-kpi" id="runs-kpi" aria-hidden="true"></div>
+        <section class="panel list-page-panel history-panel">
+          <header class="history-head">
+            <div class="history-head-main">
+              <h2 class="panel-title">复检历史</h2>
+            </div>
+            <span class="history-badge" id="runs-count">—</span>
+          </header>
+          <div class="history-body list-page-scroll table-wrap">
+          <table class="data-table history-table runs-table">
             <thead>
               <tr>
-                <th>复检时间</th>
+                <th>时间</th>
                 <th>批次</th>
-                <th>纳入整改工单</th>
-                <th>样本量</th>
-                <th>复检前缺陷率</th>
-                <th>复检后缺陷率</th>
-                <th>降幅</th>
+                <th>工单</th>
+                <th class="num">样本</th>
+                <th class="num">前</th>
+                <th class="num">后</th>
+                <th class="num">降幅</th>
                 <th>判定</th>
-                <th>明细</th>
+                <th></th>
               </tr>
             </thead>
             <tbody id="runs-body">
               <tr><td colspan="9" class="empty-cell">正在载入复检记录…</td></tr>
             </tbody>
           </table>
-        </div>
-      </section>
+          </div>
+        </section>
+      </div>
     </section>
 
-    <section class="view hidden" id="view-alertlog">
-      <div class="alertlog-stats" id="alertlog-stats"></div>
-      <section class="panel">
-        <div class="panel-head">
-          <h2 class="panel-title">报警历史</h2>
-          <span class="panel-sub" id="alertlog-count">—</span>
-        </div>
-        <div class="toolbar">
-          <label class="field-inline">
-            <span class="field-label">时间范围</span>
-            <select id="al-range">
+    <section class="view hidden history-view" id="view-alertlog">
+      <div class="history-page">
+        <div class="history-kpi" id="alertlog-stats"></div>
+        <section class="panel list-page-panel history-panel">
+          <header class="history-head">
+            <div class="history-head-main">
+              <h2 class="panel-title">报警历史</h2>
+              <p class="panel-hint" id="alertlog-scope-hint">按自然日汇总；顶栏铃铛为近 24 小时滚动统计。</p>
+            </div>
+            <span class="history-badge" id="alertlog-count">—</span>
+          </header>
+        <div class="toolbar history-toolbar">
+          <label class="field-inline" title="时间范围">
+            <span class="field-label">范围</span>
+            <select id="al-range" aria-label="时间范围">
               <option value="7">近 7 天</option>
               <option value="14" selected>近 14 天</option>
               <option value="30">近 30 天</option>
               <option value="0">全部</option>
             </select>
           </label>
-          <label class="field-inline">
-            <span class="field-label">告警等级</span>
-            <select id="al-level">
-              <option value="">全部等级</option>
-              <option value="severe">严重缺陷</option>
-              <option value="cluster">类型聚集</option>
+          <label class="field-inline" title="告警等级">
+            <span class="field-label">等级</span>
+            <select id="al-level" aria-label="告警等级">
+              <option value="">全部</option>
+              <option value="severe">严重</option>
+              <option value="cluster">聚集</option>
             </select>
           </label>
-          <label class="field-inline">
-            <span class="field-label">缺陷类型</span>
-            <select id="al-defect"></select>
+          <label class="field-inline grow" title="缺陷类型">
+            <span class="field-label">缺陷</span>
+            <select id="al-defect" aria-label="缺陷类型"></select>
           </label>
         </div>
-        <div id="alertlog-list" class="alertlog-list">
-          <div class="empty-state small"><span class="empty-title">正在载入告警记录…</span></div>
+        <div class="alertlog-scroll history-body list-page-scroll" tabindex="0" aria-label="告警列表，可滚动">
+          <div id="alertlog-list" class="alertlog-list">
+            <div class="empty-state small"><span class="empty-title">正在载入告警记录…</span></div>
+          </div>
         </div>
-      </section>
+        </section>
+      </div>
     </section>
       </main>
 
-      <footer class="site-footer">
-        <p class="footer-line">© 2026 · 钢材表面质量缺陷智能归因与闭环处置平台 · 缺陷图片来自公开 NEU-DET 数据集，工艺参数与整改推演为模拟数据</p>
-      </footer>
+      <aside class="flow-action-dock hidden" id="flow-action-dock" aria-label="闭环流程引导"></aside>
     </div>
   </div>
 
-  <div class="drawer-mask hidden" id="drawer-mask"></div>
-  <aside class="drawer hidden" id="help-drawer" aria-label="帮助与说明">
-    <div class="drawer-head">
-      <div class="drawer-title">帮助与说明</div>
-      <button class="drawer-close" id="drawer-close" aria-label="关闭">×</button>
-    </div>
-    <div class="drawer-body">
-      <section class="help-sec">
-        <div class="help-sec-title">一分钟上手</div>
-        <ol class="help-steps">
-          <li>在检测工作台从样件库点一张图，系统自动识别</li>
-          <li>到归因诊断，确认工艺参数后点「开始归因」</li>
-          <li>看主因与证据，点「生成整改工单」并填写责任人</li>
-          <li>在整改工单页推进状态：开始整改 → 完成整改 → 关闭工单</li>
-          <li>到闭环验证，勾选要纳入的整改工单，跑一次复检推演看降幅</li>
-        </ol>
-        <button class="btn btn-primary btn-block" id="help-demo-link" type="button">新手导览：自动走一遍</button>
-      </section>
-
-      <section class="help-sec">
-        <div class="help-sec-title">术语解释</div>
-        <dl class="help-dl">
-          <dt>整改工单</dt>
-          <dd>把归因结论固化成可跟踪的整改任务。生成条件：归因给出主因且建议可执行。输入是缺陷类型、主因、整改措施与责任人，输出是工单号与 待处理 → 处理中 → 已完成 → 已关闭 的状态流转。责任人：质量工程师生成与验收，产线或设备责任人执行。</dd>
-          <dt>闭环验证</dt>
-          <dd>整改完成后按批次重新抽样，用同一套规则推演缺陷率是否下降。触发条件：该缺陷类已有状态为「已完成」或「已关闭」的工单，在闭环验证第 2 步逐张勾选要纳入的工单。输出复检前后缺陷率、降幅与有效性判定。</dd>
-          <dt>预期降幅</dt>
-          <dd>规则库给出的、该根因整改后该类缺陷可下降的比例。它是规则经验值，不是实测值。</dd>
-          <dt>归因正确率</dt>
-          <dd>该类根因被判定正确的比例，来自离线评测集。判断错了，整改就落不到点上。</dd>
-          <dt>有效降幅</dt>
-          <dd>预期降幅 × 归因正确率。这是真正计入复检结果的降幅。</dd>
-          <dt>整体降幅</dt>
-          <dd>（复检前缺陷率 − 复检后缺陷率）÷ 复检前缺陷率。它是全局口径，单类整改的有效降幅要小得多，因为只影响这一类在总缺陷里的占比。</dd>
-          <dt>工单状态</dt>
-          <dd>到「已完成」才可纳入闭环验证；「已关闭」表示该整改项已验收归档、状态不再变更，如需复检其效果仍可在闭环验证中勾选。</dd>
-          <dt>复检留痕</dt>
-          <dd>每次复检推演都会记下当时纳入了哪几张工单、逐类缺陷率怎么变化，在复检历史页点「查看明细」可以看到。</dd>
-        </dl>
-      </section>
-
-      <section class="help-sec">
-        <div class="help-sec-title">页面在做什么</div>
-        <ul class="help-list">
-          <li><b>首页</b>：平台定位、能力展示与入口</li>
-          <li><b>检测工作台</b>：载入或上传图片，识别六类缺陷</li>
-          <li><b>归因诊断</b>：结合工艺参数定位根因，给四维贡献度与证据</li>
-          <li><b>整改工单</b>：归因结论转工单，跟踪到关闭</li>
-          <li><b>闭环验证</b>：逐张勾选整改工单，复检推演验证缺陷率是否下降</li>
-          <li><b>知识库</b>：30 条冶金规则，可增删改启停</li>
-          <li><b>分析看板</b>：全局指标、分布与趋势</li>
-          <li><b>复检历史</b>：历次复检推演的留痕，可展开看纳入了哪些工单与逐类明细</li>
-          <li><b>报警历史</b>：按天汇总的严重缺陷与聚集告警</li>
-        </ul>
-      </section>
-
-      <section class="help-sec">
-        <div class="help-sec-title">数据来源与口径</div>
-        <ul class="source-list">
-          <li>指标与看板：由平台样例数据离线计算，用于功能演示。</li>
-          <li>缺陷图片：来自公开 NEU-DET 数据集。</li>
-          <li>工艺参数与闭环推演：为模拟数据。</li>
-          <li>知识库：30 条行业冶金规则。</li>
-          <li>Top5 根因：按评测记录的真实根因统计。</li>
-          <li>告警规则：单次检出「严重」等级立即告警；某缺陷类型 24 小时内出现超过 3 次触发聚集告警。</li>
-        </ul>
-      </section>
-    </div>
-  </aside>
+  <footer class="site-statusbar" role="contentinfo">
+    缺陷样件 NEU-DET · 工艺参数与闭环推演为模拟数据 © 2026
+  </footer>
 
   <div class="modal-mask hidden" id="modal-mask"></div>
   <div class="modal hidden" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
@@ -513,6 +453,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
-  <script src="/static/js/app.js"></script>
+  <script src="/static/js/app.js?v=5"></script>
 </body>
 </html>
+
