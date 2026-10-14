@@ -65,6 +65,20 @@ CREATE TABLE IF NOT EXISTS closed_loop_runs (
     measures     TEXT    NOT NULL,
     created_at   TEXT    NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS closed_loop_run_orders (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id     INTEGER NOT NULL,
+    order_id   INTEGER,
+    ticket_no  TEXT,
+    defect_cn  TEXT,
+    root_cause TEXT,
+    measure    TEXT,
+    owner      TEXT,
+    status     TEXT
+);
+
+CREATE INDEX IF NOT EXISTS idx_cl_run_orders ON closed_loop_run_orders (run_id);
 """
 
 WORK_ORDER_STATUS = ["待处理", "处理中", "已解决", "已关闭"]
@@ -367,7 +381,8 @@ def _run_row(row):
 
 
 def save_closed_loop_run(db_path, ticket_no, batch_key, batch_label, sample_size,
-                         before_rate, after_rate, drop_pct, verdict, per_class, measures, ts):
+                         before_rate, after_rate, drop_pct, verdict, per_class, measures, ts,
+                         orders=None):
     conn = connect(db_path)
     with conn:
         cur = conn.execute(
@@ -382,9 +397,20 @@ def save_closed_loop_run(db_path, ticket_no, batch_key, batch_label, sample_size
             ),
         )
         run_id = cur.lastrowid
+        for o in orders or []:
+            conn.execute(
+                "INSERT INTO closed_loop_run_orders (run_id, order_id, ticket_no, defect_cn,"
+                " root_cause, measure, owner, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+                (
+                    run_id, o.get("id"), o.get("ticket_no"), o.get("defect_cn"),
+                    o.get("root_cause"), o.get("measure"), o.get("owner"), o.get("status"),
+                ),
+            )
         row = conn.execute("SELECT * FROM closed_loop_runs WHERE id = ?", (run_id,)).fetchone()
     conn.close()
-    return _run_row(row)
+    run = _run_row(row)
+    run["orders"] = [dict(o) for o in (orders or [])]
+    return run
 
 
 def list_closed_loop_runs(db_path, limit=20):
@@ -392,8 +418,21 @@ def list_closed_loop_runs(db_path, limit=20):
     rows = conn.execute(
         "SELECT * FROM closed_loop_runs ORDER BY id DESC LIMIT ?", (int(limit),)
     ).fetchall()
+    runs = [_run_row(r) for r in rows]
+    if runs:
+        ids = [r["id"] for r in runs]
+        marks = ",".join("?" for _ in ids)
+        orows = conn.execute(
+            f"SELECT * FROM closed_loop_run_orders WHERE run_id IN ({marks}) ORDER BY id ASC",
+            ids,
+        ).fetchall()
+        by_run = {}
+        for o in orows:
+            by_run.setdefault(o["run_id"], []).append(dict(o))
+        for r in runs:
+            r["orders"] = by_run.get(r["id"], [])
     conn.close()
-    return [_run_row(r) for r in rows]
+    return runs
 
 
 def next_ticket_no(db_path, ts):

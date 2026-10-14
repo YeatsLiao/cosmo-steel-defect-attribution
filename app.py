@@ -357,6 +357,19 @@ def closed_loop_runs(limit: int = 20):
     return {"items": db.list_closed_loop_runs(DB_PATH, limit=limit)}
 
 
+def _orders_snapshot(order_ids):
+    """按前端选中的工单 id 取快照，作为复检留痕的一部分。"""
+    snap = []
+    for oid in order_ids or []:
+        try:
+            o = db.get_work_order(DB_PATH, int(oid))
+        except (TypeError, ValueError):
+            continue
+        if o:
+            snap.append(o)
+    return snap
+
+
 @app.post("/api/closed-loop/verify")
 async def closed_loop_verify(payload: dict):
     data = payload or {}
@@ -376,9 +389,10 @@ async def closed_loop_verify(payload: dict):
         executed_drops=executed_drops,
     )
     if data.get("save"):
+        orders = _orders_snapshot(data.get("order_ids"))
         db.save_closed_loop_run(
             DB_PATH,
-            ticket_no=data.get("ticket_no"),
+            ticket_no=data.get("ticket_no") or ",".join([o.get("ticket_no") or "" for o in orders]) or None,
             batch_key=result["batch_key"],
             batch_label=result["batch_label"],
             sample_size=result["sample_size"],
@@ -389,6 +403,7 @@ async def closed_loop_verify(payload: dict):
             per_class=result["per_class"],
             measures=result["measures"],
             ts=datetime.now().strftime("%Y-%m-%d %H:%M"),
+            orders=orders,
         )
     return result
 
